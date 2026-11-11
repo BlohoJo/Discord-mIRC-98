@@ -1,6 +1,6 @@
 # Discord mIRC 98 — Make Discord.com look like mIRC running on Windows 98 (via both a custom User Style and custom User Script)
 
-Theme [`discord-mirc98.user.css`](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98.user.css) **1.1.1** · companion [`discord-mirc98-companion.user.js`](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98-companion.user.js) **1.1.1**
+Theme `discord-mirc98.user.css` **v1.1.1** · Companion `discord-mirc98-companion.user.js` **v1.1.1**
 
 Makes browser Discord look like mIRC running on Windows 98 SE: black panes, the mIRC 16-colour palette, Fixedsys text, beveled grey chrome, navy title bars, `[hh:mm] <nick>` lines, and **green** normal chat text.
 
@@ -13,9 +13,10 @@ Makes browser Discord look like mIRC running on Windows 98 SE: black panes, the 
 
 - [User Style](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98.user.css)
 - [User Script](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98-companion.user.js)
-
+<br><br>
 <img width="1024" height="695" alt="Main" src="https://github.com/user-attachments/assets/0d3bca7c-1fa7-4ca8-be8e-f475a71d10f9" />
 <em>(Yes, the top menu bar does in fact function.)</em> ❖😎
+<br>
 
 ### Why Stylus and not Tampermonkey
 
