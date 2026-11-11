@@ -1,0 +1,740 @@
+/* ==UserStyle==
+@name           Discord mIRC 98 (green-on-black)
+@namespace      github.com/BlohoJo/discord-mirc98
+@version        1.1.1
+@description    Makes browser Discord (discord.com) look like mIRC running on Windows 98 SE: black panes, mIRC palette, Fixedsys, beveled grey chrome, navy title bars, [hh:mm] <nick> lines, green chat text.
+@author         BlohoJo
+@license        MIT
+@preprocessor   default
+
+@var color  mirc-chat        "Normal chat text"              #00FC00
+@var color  mirc-bg          "Pane background"               #000000
+@var color  mirc-timestamp   "Timestamp"                     #7F7F7F
+@var color  mirc-nick        "Nick (no role colour)"         #D2D2D2
+@var color  mirc-join        "Join / system events (green)"  #009300
+@var color  mirc-mode        "Mode / info (light blue)"      #0000FC
+@var color  mirc-topic       "Topic / header text"           #FFFFFF
+@var color  mirc-highlight   "Highlight (you were mentioned)" #FF0000
+@var color  mirc-action      "Action / typing (purple)"      #9C009C
+@var color  mirc-notice      "Notice / replies (brown)"      #7F0000
+@var color  mirc-mention     "@mention pill (orange)"        #FC7F00
+@var color  mirc-link        "Links (light cyan)"            #00FFFF
+@var color  mirc-tree        "Treebar / channel list text"   #D2D2D2
+@var color  mirc-unread      "Unread channel (red)"          #FF0000
+@var color  win-face         "Win98 button face"             #C0C0C0
+@var color  win-title-a      "Active title bar (left)"       #000080
+@var color  win-title-b      "Active title bar (right)"      #1084D0
+
+@var text   mirc-font        "Chat / tree / nicklist font"   "'Fixedsys Excelsior 3.01', 'Fixedsys Excelsior', Fixedsys, 'Lucida Console', Consolas, 'Courier New', monospace"
+@var text   win-font         "Window chrome font"            "'Pixelated MS Sans Serif', 'MS Sans Serif', 'Microsoft Sans Serif', Tahoma, Arial, sans-serif"
+@var number mirc-size        "Text size: chat, channel list, server names, nicklist (px)" [15, 10, 24, 1, "px"]
+@var text   nick-open        "Text before nick (CSS string)" '"<"'
+@var text   nick-close       "Text after nick (CSS string)"  '">"'
+@var select fake-chrome      "Fake mIRC title bar + menu bar" {
+  "Show": "1",
+  "Hide": "0"
+}
+==/UserStyle== */
+
+@-moz-document domain("discord.com") {
+
+/* =========================================================================
+   0. Shared values
+   ========================================================================= */
+:root {
+  --w98-raised: inset -1px -1px #0a0a0a, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --w98-sunken: inset -1px -1px #ffffff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  --w98-field:  inset -1px -1px #ffffff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  --w98-etched: inset -1px -1px #ffffff, inset 1px 1px #808080;
+  --mirc-chrome-h: calc(var(--fake-chrome) * 40px);
+}
+
+/* =========================================================================
+   1. Override Discord's own theme variables (old + 2025 "visual refresh" names)
+   ========================================================================= */
+html, :root, .theme-dark, .theme-light, .theme-darker, .theme-midnight, .visual-refresh,
+.visual-refresh.theme-dark, .visual-refresh.theme-light {
+  --font-primary: var(--win-font) !important;
+  --font-display: var(--win-font) !important;
+  --font-headline: var(--win-font) !important;
+  --font-code: var(--mirc-font) !important;
+
+  --background-primary: var(--mirc-bg) !important;
+  --background-secondary: var(--mirc-bg) !important;
+  --background-secondary-alt: var(--win-face) !important;
+  --background-tertiary: var(--win-face) !important;
+  --background-floating: var(--mirc-bg) !important;
+  --background-nested-floating: var(--mirc-bg) !important;
+  --background-accent: #000080 !important;
+  --background-mobile-primary: var(--mirc-bg) !important;
+  --background-mobile-secondary: var(--mirc-bg) !important;
+  --background-base-lowest: var(--win-face) !important;
+  --background-base-lower: var(--mirc-bg) !important;
+  --background-base-low: var(--mirc-bg) !important;
+  --background-surface-high: var(--mirc-bg) !important;
+  --background-surface-higher: var(--mirc-bg) !important;
+  --background-surface-highest: var(--mirc-bg) !important;
+  --chat-background-default: var(--mirc-bg) !important;
+  --chat-background: var(--mirc-bg) !important;
+  --bg-base-primary: var(--mirc-bg) !important;
+  --bg-base-secondary: var(--mirc-bg) !important;
+  --bg-base-tertiary: var(--win-face) !important;
+  --bg-overlay-chat: var(--mirc-bg) !important;
+  --bg-overlay-1: var(--mirc-bg) !important;
+  --bg-overlay-2: var(--mirc-bg) !important;
+  --bg-overlay-3: var(--mirc-bg) !important;
+  --modal-background: var(--mirc-bg) !important;
+  --modal-footer-background: var(--win-face) !important;
+  --channeltextarea-background: var(--mirc-bg) !important;
+  --input-background: var(--mirc-bg) !important;
+  --deprecated-card-bg: var(--mirc-bg) !important;
+  --deprecated-store-bg: var(--mirc-bg) !important;
+  --home-background: var(--mirc-bg) !important;
+
+  --background-modifier-hover: rgba(0, 0, 128, .55) !important;
+  --background-modifier-active: rgba(0, 0, 128, .75) !important;
+  --background-modifier-selected: #000080 !important;
+  --background-modifier-accent: #808080 !important;
+  --background-message-hover: rgba(0, 0, 128, .25) !important;
+  --background-mentioned: transparent !important;
+  --background-mentioned-hover: rgba(127, 0, 0, .25) !important;
+
+  --text-normal: var(--mirc-chat) !important;
+  --text-default: var(--mirc-chat) !important;
+  --text-strong: var(--mirc-topic) !important;
+  --text-muted: var(--mirc-timestamp) !important;
+  --text-subtle: var(--mirc-timestamp) !important;
+  --text-link: var(--mirc-link) !important;
+  --text-positive: var(--mirc-join) !important;
+  --text-danger: var(--mirc-highlight) !important;
+  --text-warning: var(--mirc-mention) !important;
+  --header-primary: var(--mirc-topic) !important;
+  --header-secondary: var(--mirc-tree) !important;
+  --channels-default: var(--mirc-tree) !important;
+  --channel-icon: var(--mirc-tree) !important;
+  --interactive-normal: var(--mirc-tree) !important;
+  --interactive-hover: #ffffff !important;
+  --interactive-active: #ffffff !important;
+  --interactive-muted: #7F7F7F !important;
+  --mention-foreground: var(--mirc-mention) !important;
+  --mention-background: transparent !important;
+
+  --scrollbar-thin-thumb: var(--win-face) !important;
+  --scrollbar-thin-track: #dfdfdf !important;
+  --scrollbar-auto-thumb: var(--win-face) !important;
+  --scrollbar-auto-track: #dfdfdf !important;
+  --scrollbar-auto-scrollbar-color-thumb: var(--win-face) !important;
+  --scrollbar-auto-scrollbar-color-track: #dfdfdf !important;
+
+  --brand-experiment: #000080 !important;
+  --brand-500: #000080 !important;
+  --radius-xs: 0 !important; --radius-sm: 0 !important; --radius-md: 0 !important;
+  --radius-lg: 0 !important; --radius-xl: 0 !important; --radius-round: 0 !important;
+  --elevation-low: none !important; --elevation-medium: none !important;
+  --elevation-high: none !important; --elevation-stroke: none !important;
+}
+/* (1.1.1) the old ':root { --custom-guild-sidebar-width: 220px }' line was dropped: live Discord sets that
+   variable as an inline style on <body>, which always beat the :root rule, so it never did anything.
+   Column widths are the companion's job (drag the splitters / Window > Reset Column Widths). */
+
+/* Everything square, no soft shadows/animations that betray 2020s UI */
+#app-mount *:not([class*="avatar"]):not([class*="status"]):not(rect):not(circle):not(svg) {
+  border-radius: 0 !important;
+}
+#app-mount { font-family: var(--win-font) !important; font-size: 11px; }
+body { background: var(--win-face) !important; }
+
+/* =========================================================================
+   2. Fake mIRC window title bar + menu bar (toggle in style settings)
+   ========================================================================= */
+body::before {
+  content: "mIRC - [Discord]";
+  position: fixed; z-index: 2147483000; top: 0; left: 0; right: 0;
+  height: calc(var(--fake-chrome) * 20px);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: calc(var(--fake-chrome) * 3px) 4px 0 24px;
+  font: bold 11px var(--win-font);
+  color: #fff;
+  pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='1' y='2' width='14' height='12' fill='%23C0C0C0' stroke='%23000'/%3E%3Crect x='2' y='3' width='12' height='3' fill='%23000080'/%3E%3Crect x='3' y='8' width='10' height='1' fill='%23009300'/%3E%3Crect x='3' y='10' width='7' height='1' fill='%23009300'/%3E%3C/svg%3E") 4px 2px / 16px 16px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='14'%3E%3Cdefs%3E%3Cg id='b'%3E%3Crect width='16' height='14' fill='%230a0a0a'/%3E%3Crect width='15' height='13' fill='%23fff'/%3E%3Crect x='1' y='1' width='14' height='12' fill='%23808080'/%3E%3Crect x='1' y='1' width='13' height='11' fill='%23dfdfdf'/%3E%3Crect x='2' y='2' width='12' height='10' fill='%23c0c0c0'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23b'/%3E%3Cuse href='%23b' x='16'/%3E%3Cuse href='%23b' x='36'/%3E%3Crect x='4' y='9' width='6' height='2' fill='%23000'/%3E%3Crect x='19.5' y='2.5' width='8' height='8' fill='none' stroke='%23000'/%3E%3Crect x='19' y='3' width='9' height='1' fill='%23000'/%3E%3Cpath d='M40 3l7 7M47 3l-7 7' stroke='%23000' stroke-width='1.6'/%3E%3C/svg%3E") right 3px top 3px / 52px 14px no-repeat,
+    linear-gradient(90deg, var(--win-title-a), var(--win-title-b));
+}
+body::after {
+  content: "File    View    Favorites    Tools    Commands    Window    Help";
+  white-space: pre;
+  position: fixed; z-index: 2147483000; left: 0; right: 0;
+  top: calc(var(--fake-chrome) * 20px);
+  height: calc(var(--fake-chrome) * 20px);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: calc(var(--fake-chrome) * 3px) 8px 0;
+  font: 11px var(--win-font);
+  color: #000;
+  background: var(--win-face);
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+  pointer-events: none;
+}
+#app-mount {
+  position: fixed !important;
+  top: var(--mirc-chrome-h) !important;
+  left: 0 !important; right: 0 !important; bottom: 0 !important;
+  width: auto !important; height: auto !important;
+}
+/* Popouts/menus/tooltips are positioned from viewport coordinates – keep their layer viewport-anchored */
+[class*="layerContainer_"] {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+}
+
+/* Discord's own 2025 top bar -> grey mIRC toolbar strip */
+div[class^="base_"] > div[class^="bar_"],
+div[class*=" base_"] > div[class^="bar_"] {
+  background: var(--win-face) !important;
+  box-shadow: var(--w98-raised) !important;
+  color: #000 !important;
+  font-family: var(--win-font) !important;
+}
+div[class^="base_"] > div[class^="bar_"] *,
+div[class*=" base_"] > div[class^="bar_"] * { color: #000 !important; }
+
+/* =========================================================================
+   3. Server list -> grey vertical switchbar with square beveled buttons
+   ========================================================================= */
+nav[aria-label="Servers sidebar"], nav[class*="guilds_"] {
+  background: var(--win-face) !important;
+  box-shadow: var(--w98-raised) !important;
+}
+nav[aria-label="Servers sidebar"] foreignObject,
+nav[class*="guilds_"] foreignObject { mask: none !important; -webkit-mask: none !important; }
+nav[aria-label="Servers sidebar"] [class*="childWrapper_"],
+nav[aria-label="Servers sidebar"] foreignObject img,
+nav[aria-label="Servers sidebar"] [class*="icon_"] {
+  border-radius: 0 !important;
+}
+nav[aria-label="Servers sidebar"] [class*="childWrapper_"] {
+  background: var(--win-face) !important;
+  color: #000 !important;
+  box-shadow: var(--w98-raised) !important;
+  font-family: var(--win-font) !important;
+}
+nav[aria-label="Servers sidebar"] foreignObject img {
+  box-shadow: var(--w98-raised);
+  padding: 2px; box-sizing: border-box; background: var(--win-face);
+}
+nav[aria-label="Servers sidebar"] [class*="selected_"] [class*="childWrapper_"],
+nav[aria-label="Servers sidebar"] [class*="selected_"] img { box-shadow: var(--w98-sunken) !important; }
+nav[aria-label="Servers sidebar"] [class*="pill_"] span,
+nav[aria-label="Servers sidebar"] [class*="item_"][class*="pill"],
+nav[aria-label="Servers sidebar"] [class*="overlay_"] > [class*="item_"] { background: #000080 !important; border-radius: 0 !important; }
+nav[aria-label="Servers sidebar"] [class*="guildSeparator_"] {
+  background: transparent !important; height: 2px !important; box-shadow: var(--w98-etched);
+}
+nav[aria-label="Servers sidebar"] [class*="numberBadge_"], [class*="numberBadge_"] {
+  background: var(--mirc-highlight) !important; color: #fff !important;
+  font: bold 10px var(--win-font) !important; border-radius: 0 !important;
+}
+/* Any text Discord shows in the server list (acronym "icons" of servers without an image, folder
+   names) follows --mirc-size. The "Names" / "Icons + Names" server-list modes are drawn by the
+   companion script (html.mirc98-gl-text) and use --mirc-size / --mirc-font / --mirc-tree too. */
+nav[aria-label="Servers sidebar"] [class*="childWrapper_"] [class*="acronym_"],
+nav[aria-label="Servers sidebar"] [class*="folderIconWrapper_"] + [class*="name_"],
+nav[aria-label="Servers sidebar"] [class*="expandedFolderBackground_"] + * [class*="name_"] {
+  font-size: calc(var(--mirc-size) - 2px) !important;
+  font-family: var(--win-font) !important;
+}
+
+/* =========================================================================
+   4. Channel list -> mIRC treebar (black, Fixedsys, navy selection)
+   ========================================================================= */
+[class^="sidebar_"], [class*=" sidebar_"],
+nav[aria-label*="(server)"], nav[class*="container_"][aria-label],
+[class*="privateChannels_"] {
+  background: var(--mirc-bg) !important;
+  font-family: var(--mirc-font) !important;
+}
+ul[aria-label="Channels"], [class*="privateChannels_"] {
+  font-family: var(--mirc-font) !important;
+  box-shadow: var(--w98-sunken);
+}
+/* Server name header in channel sidebar -> mini title bar */
+[class^="sidebar_"] header, [class*=" sidebar_"] header {
+  background: linear-gradient(90deg, var(--win-title-a), var(--win-title-b)) !important;
+  box-shadow: none !important;
+  font-family: var(--win-font) !important;
+}
+[class^="sidebar_"] header *, [class*=" sidebar_"] header * {
+  color: #fff !important; font: bold 11px var(--win-font) !important;
+}
+/* Categories -> "folder" nodes */
+[data-list-item-id^="channels___"] [class*="mainContent_"] h3,
+li[class*="containerDefault_"] h3,
+[class*="containerDefault_"] [class*="name_"][class*="overflow"] {
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;      /* v1.1: --mirc-size now covers the whole left column */
+  line-height: 1.25 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: var(--mirc-tree) !important;
+}
+li[class*="containerDefault_"]:has(h3) [class*="mainContent_"] { display: flex !important; align-items: center !important; min-width: 0; }
+li[class*="containerDefault_"]:has(h3) [class*="mainContent_"]::before {
+  content: "";
+  display: inline-block; flex: none; width: 16px; height: 13px; margin-right: 4px; vertical-align: -2px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='13'%3E%3Cpath d='M0.5 2.5h5l1 1.5h8.5v8.5h-14.5z' fill='%23FFFF00' stroke='%23808000'/%3E%3Cpath d='M1 5h14' stroke='%23fff'/%3E%3C/svg%3E") no-repeat;
+}
+/* Channel rows */
+[data-list-item-id^="channels___"], [class*="containerDefault_"] [class*="link_"],
+[class*="privateChannels_"] a {
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+  color: var(--mirc-tree) !important;
+}
+[class*="containerDefault_"] [class*="name_"],
+[class*="privateChannels_"] [class*="name_"],
+[class*="privateChannels_"] [class*="subtext_"],
+[class*="containerDefault_"] [class*="subtext_"] {
+  color: var(--mirc-tree) !important;
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+  font-weight: normal !important;
+}
+/* channel rows grow/shrink with the font instead of staying 32-34px tall */
+[data-list-item-id^="channels___"] [class*="link_"], [class*="containerDefault_"] [class*="link_"] {
+  height: auto !important; min-height: 0 !important; padding-top: 1px !important; padding-bottom: 1px !important;
+}
+/* Unread = red (mIRC switchbar "message" colour) */
+[class*="modeUnread_"] [class*="name_"], [class*="unread_"] + * [class*="name_"] {
+  color: var(--mirc-unread) !important;
+}
+/* Muted = grey */
+[class*="modeMuted_"] [class*="name_"] { color: #7F7F7F !important; }
+/* Selected = classic white-on-navy */
+[class*="modeSelected_"] [class*="link_"], [class*="modeSelected_"] [class*="wrapper_"],
+[class*="privateChannels_"] [class*="selected_"] {
+  background: #000080 !important;
+  outline: 1px dotted #ffff00; outline-offset: -1px;
+}
+[class*="modeSelected_"] [class*="name_"], [class*="modeSelected_"] svg,
+[class*="privateChannels_"] [class*="selected_"] * { color: #fff !important; }
+[class*="containerDefault_"] [class*="wrapper_"]:hover { background: rgba(0, 0, 128, .55) !important; }
+[class*="unread_"][class*="unreadImportant"], [class*="containerDefault_"] [class*="unread_"] {
+  background: var(--mirc-unread) !important; border-radius: 0 !important;
+}
+
+/* User area (bottom-left) -> grey status panel
+   (the companion script, v1.1+, can detach this into a floating Win98 window; see README) */
+section[aria-label="User area"], [class*="panels_"] {
+  background: var(--win-face) !important;
+  box-shadow: var(--w98-raised) !important;
+}
+section[aria-label="User area"] *, [class*="panels_"] [class*="title_"],
+[class*="panels_"] [class*="subtext_"], [class*="panels_"] [class*="hovered_"] {
+  color: #000 !important;
+  font-family: var(--win-font) !important;
+}
+section[aria-label="User area"] button:hover { background: #dfdfdf !important; }
+
+/* =========================================================================
+   5. Channel header -> active MDI child title bar
+   ========================================================================= */
+section[aria-label="Channel header"], section[class*="title_"][aria-label],
+[class*="chat_"] > section[class*="title_"] {
+  background: linear-gradient(90deg, var(--win-title-a), var(--win-title-b)) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  min-height: 22px !important; height: 26px !important;
+  font-family: var(--win-font) !important;
+}
+section[aria-label="Channel header"] *, section[class*="title_"][aria-label] * {
+  color: #fff !important;
+  font-family: var(--win-font) !important;
+}
+section[aria-label="Channel header"] h1, section[aria-label="Channel header"] h2,
+section[aria-label="Channel header"] [class*="title_"] { font-weight: bold !important; font-size: 11px !important; }
+section[aria-label="Channel header"] [class*="topic_"] { font-weight: normal !important; font-size: 11px !important; }
+section[aria-label="Channel header"] [class*="topic_"]::before { content: ": "; }
+/* Header search box -> sunken white field like a Win98 textbox */
+section[aria-label="Channel header"] [class*="search_"] [class*="searchBar_"],
+section[aria-label="Channel header"] [class*="search_"] > div {
+  background: #fff !important; box-shadow: var(--w98-field) !important;
+}
+section[aria-label="Channel header"] [class*="search_"] *,
+section[aria-label="Channel header"] [class*="search_"] [class*="public-DraftEditorPlaceholder"] { color: #000 !important; }
+
+/* =========================================================================
+   6. Chat pane -> black mIRC buffer: [hh:mm] <nick> green text
+   ========================================================================= */
+main[class*="chatContent_"], [class*="chat_"], [class*="messagesWrapper_"],
+ol[data-list-id="chat-messages"] {
+  background: var(--mirc-bg) !important;
+}
+main[class*="chatContent_"] { box-shadow: var(--w98-sunken); }
+ol[data-list-id="chat-messages"],
+ol[data-list-id="chat-messages"] [class*="messageContent_"],
+ol[data-list-id="chat-messages"] [class*="markup_"],
+ol[data-list-id="chat-messages"] h3,
+ol[data-list-id="chat-messages"] time {
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+  line-height: 1.25 !important;
+}
+li[id^="chat-messages-"] [class*="message_"] { padding-top: 0 !important; padding-bottom: 0 !important; min-height: 0 !important; }
+li[id^="chat-messages-"] [class*="groupStart_"] { margin-top: 2px !important; }
+
+/* THE normal chat text: green */
+[id^="message-content-"], [id^="message-content-"] [class*="markup_"],
+[class*="messageContent_"], [class*="markup_"][class*="messageContent_"] {
+  color: var(--mirc-chat) !important;
+}
+[id^="message-content-"] strong, [id^="message-content-"] em, [id^="message-content-"] u,
+[id^="message-content-"] li, [id^="message-content-"] h1, [id^="message-content-"] h2,
+[id^="message-content-"] h3 { color: var(--mirc-chat) !important; font-family: var(--mirc-font) !important; }
+[class*="messageContent_"] [class*="edited_"], [class*="messageContent_"] [class*="timestamp_"] {
+  color: var(--mirc-timestamp) !important; font-size: 12px !important;
+}
+
+/* Timestamps -> [hh:mm] in grey */
+ol[data-list-id="chat-messages"] time,
+ol[data-list-id="chat-messages"] [class*="timestamp_"] {
+  color: var(--mirc-timestamp) !important;
+}
+ol[data-list-id="chat-messages"] time[id^="message-timestamp-"]::before { content: "["; }
+ol[data-list-id="chat-messages"] time[id^="message-timestamp-"]::after { content: "]"; }
+/* Discord's own hidden "[" "]" copy-helpers would double up in compact mode */
+ol[data-list-id="chat-messages"] [class*="timestamp_"] i[class*="separator_"],
+ol[data-list-id="chat-messages"] [class*="timestamp_"] [aria-hidden="true"][class*="separator"] { display: none !important; }
+
+/* Nick -> <nick> (role colour kept; no role = mIRC grey) */
+[id^="message-username-"] [class*="username_"] {
+  font-family: var(--mirc-font) !important;
+  font-weight: normal !important;
+  color: var(--mirc-nick);
+}
+[id^="message-username-"] [class*="username_"]::before { content: var(--nick-open); color: var(--mirc-nick); }
+[id^="message-username-"] [class*="username_"]::after  { content: var(--nick-close); color: var(--mirc-nick); }
+[id^="message-username-"] [class*="username_"]:hover { text-decoration: underline; }
+/* Hide big cozy avatars for a text-only buffer feel (compact mode recommended) */
+li[id^="chat-messages-"] img[class*="avatar_"] { width: 16px !important; height: 16px !important; margin-top: 2px; border-radius: 0 !important; }
+li[id^="chat-messages-"] [class*="cozy_"] img[class*="avatar_"] { left: 16px !important; }
+li[id^="chat-messages-"] [class*="botTag"], li[id^="chat-messages-"] [class*="botText_"] {
+  background: #000080 !important; color: #fff !important; border-radius: 0 !important; font-family: var(--win-font) !important;
+}
+
+/* Hover row */
+li[id^="chat-messages-"] [class*="message_"]:hover { background: rgba(0, 0, 128, .25) !important; }
+
+/* You were mentioned -> mIRC highlight colour */
+li[id^="chat-messages-"] [class*="mentioned_"] {
+  background: transparent !important;
+  box-shadow: inset 3px 0 0 var(--mirc-highlight) !important;
+}
+li[id^="chat-messages-"] [class*="mentioned_"]::before { display: none !important; }
+li[id^="chat-messages-"] [class*="mentioned_"] [id^="message-content-"],
+li[id^="chat-messages-"] [class*="mentioned_"] [id^="message-content-"] * { color: var(--mirc-highlight) !important; }
+
+/* @mentions / #channel pills */
+.mention, [class*="mention"][role="button"], span[class*="mention_"] {
+  background: transparent !important;
+  color: var(--mirc-mention) !important;
+  font-weight: bold !important;
+  border-radius: 0 !important;
+}
+.mention:hover { background: #000080 !important; color: #fff !important; }
+
+/* Links */
+[id^="message-content-"] a, [class*="anchor_"] {
+  color: var(--mirc-link) !important; text-decoration: underline !important;
+}
+
+/* System messages (joins, pins, boosts) -> mIRC join green with *** */
+li[id^="chat-messages-"] [class*="systemMessage"],
+li[id^="chat-messages-"] [class*="systemMessage"] *,
+li[id^="chat-messages-"] [class*="isSystemMessage_"] [class*="content_"],
+li[id^="chat-messages-"] [class*="isSystemMessage_"] [class*="content_"] * {
+  color: var(--mirc-join) !important;
+  font-family: var(--mirc-font) !important;
+}
+li[id^="chat-messages-"] [class*="isSystemMessage_"] [class*="content_"] > div:first-child::before { content: "*** "; }
+
+/* Reply preview line -> notice brown/grey */
+[id^="message-reply-context-"], [id^="message-reply-context-"] * {
+  color: #7F7F7F !important; font-family: var(--mirc-font) !important;
+}
+[id^="message-reply-context-"] [class*="username_"] { color: var(--mirc-mention) !important; }
+[id^="message-reply-context-"]::before { border-color: #7F7F7F !important; border-radius: 0 !important; }
+
+/* Day change divider -> "*** Day changed" */
+ol[data-list-id="chat-messages"] [class*="divider_"][role="separator"] { border-top: 0 !important; }
+ol[data-list-id="chat-messages"] [class*="divider_"] span[class*="content_"],
+ol[data-list-id="chat-messages"] [class*="divider_"] [class*="content_"] {
+  background: transparent !important;
+  color: color-mix(in srgb, var(--mirc-mode) 65%, #ffffff) !important;
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+  font-weight: normal !important;
+  left: 0 !important; transform: none !important; padding-left: 0 !important;
+}
+ol[data-list-id="chat-messages"] [class*="divider_"] [class*="content_"]::before { content: "*** Day changed: "; }
+ol[data-list-id="chat-messages"] [class*="divider_"][class*="isUnread_"],
+ol[data-list-id="chat-messages"] [class*="divider_"][class*="isUnread_"] [class*="content_"] {
+  color: var(--mirc-highlight) !important; border-color: var(--mirc-highlight) !important;
+}
+ol[data-list-id="chat-messages"] [class*="divider_"] [class*="unreadPill_"] {
+  background: var(--mirc-highlight) !important; color: #fff !important; border-radius: 0 !important;
+  font-family: var(--win-font) !important;
+}
+ol[data-list-id="chat-messages"] [class*="unreadPillCap"] { display: none !important; }
+
+/* Code */
+[id^="message-content-"] code, [class*="markup_"] code, [class*="markup_"] pre, [class*="codeContainer_"] {
+  background: #000 !important;
+  color: #00FFFF !important;
+  border: 1px solid #7F7F7F !important;
+  font-family: var(--mirc-font) !important;
+}
+[class*="blockquoteContainer_"] [class*="blockquoteDivider_"] { background: #7F7F7F !important; border-radius: 0 !important; }
+
+/* Embeds, attachments, reactions */
+[id^="message-accessories-"] article, [class*="embedFull_"], [class*="embed_"][class*="embedFull"] {
+  background: #000 !important;
+  border: 0 !important;
+  box-shadow: var(--w98-sunken), inset 6px 0 0 #808080 !important;
+  font-family: var(--mirc-font) !important;
+}
+[class*="embedFull_"] *, [class*="embedDescription_"] { color: #D2D2D2 !important; }
+[class*="embedFull_"] a, [class*="embedTitleLink_"] { color: var(--mirc-link) !important; }
+[class*="reaction_"] {
+  background: var(--win-face) !important; box-shadow: var(--w98-raised) !important;
+  border: 0 !important; border-radius: 0 !important;
+}
+[class*="reaction_"] [class*="reactionCount_"] { color: #000 !important; font-family: var(--win-font) !important; }
+[class*="reaction_"][class*="reactionMe_"] { box-shadow: var(--w98-sunken) !important; background: #dfdfdf !important; }
+[class*="imageWrapper_"], [class*="imageContainer_"] img { border-radius: 0 !important; }
+
+/* Hover action toolbar on messages -> small Win98 toolbar */
+[class*="buttonsInner_"], [class*="buttons_"] [class*="wrapper_"][role="group"] {
+  background: var(--win-face) !important; box-shadow: var(--w98-raised) !important; border: 0 !important;
+}
+[class*="buttonsInner_"] *, [class*="buttons_"] [role="button"] svg { color: #000 !important; }
+[class*="buttonsInner_"] [role="button"]:hover { background: #dfdfdf !important; }
+
+/* Jump-to-present bar */
+[class*="jumpToPresentBar_"], [class*="newMessagesBar_"] {
+  background: #000080 !important; color: #fff !important; border-radius: 0 !important; font-family: var(--win-font) !important;
+}
+[class*="jumpToPresentBar_"] *, [class*="newMessagesBar_"] * { color: #fff !important; }
+
+/* =========================================================================
+   7. Message box -> mIRC editbox
+   ========================================================================= */
+form [class*="channelTextArea_"], form [class*="scrollableContainer_"] {
+  background: var(--mirc-bg) !important;
+  box-shadow: var(--w98-sunken) !important;
+  border: 0 !important; border-radius: 0 !important;
+}
+form [class*="channelTextArea_"] [role="textbox"],
+form [class*="channelTextArea_"] [class*="slateTextArea_"],
+form [class*="channelTextArea_"] [class*="markup_"] {
+  color: var(--mirc-chat) !important;
+  caret-color: var(--mirc-chat);
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+}
+form [class*="channelTextArea_"] [class*="placeholder_"] {
+  color: #7F7F7F !important; font-family: var(--mirc-font) !important; font-size: var(--mirc-size) !important;
+}
+form [class*="channelTextArea_"] [class*="buttons_"] svg,
+form [class*="attachButton_"] svg { color: #D2D2D2 !important; }
+/* typing indicator -> "* nick is typing..." purple */
+form [class*="typing_"], form [class*="typing_"] * {
+  color: var(--mirc-action) !important;
+  font-family: var(--mirc-font) !important;
+  background: transparent !important;
+  filter: brightness(1.4);
+}
+form [class*="typing_"] [class*="text_"]::before { content: "* "; }
+
+/* =========================================================================
+   8. Member list -> nicklist
+   ========================================================================= */
+[class*="membersWrap_"], aside[class*="membersWrap_"], [class*="members_"], div[aria-label="Members"] {
+  background: var(--mirc-bg) !important;
+  font-family: var(--mirc-font) !important;
+}
+[class*="membersWrap_"] { box-shadow: var(--w98-sunken); }
+[class*="members_"] [class*="member_"] [class*="layout_"] { height: auto !important; min-height: 20px !important; padding: 1px 4px !important; }
+[class*="members_"] [class*="member_"] [class*="avatar_"] { width: 16px !important; height: 16px !important; }
+[class*="members_"] [class*="member_"] [class*="name_"],
+[class*="members_"] [class*="member_"] [class*="username_"] {
+  font-family: var(--mirc-font) !important;
+  font-size: var(--mirc-size) !important;
+  font-weight: normal !important;
+  color: var(--mirc-nick);
+}
+[class*="members_"] [class*="member_"] [class*="subText_"],
+[class*="members_"] [class*="member_"] [class*="activity_"] { display: none !important; }
+[class*="members_"] [class*="member_"]:hover [class*="layout_"],
+[class*="members_"] [class*="member_"] [class*="selected_"] { background: #000080 !important; }
+[class*="members_"] h3[class*="membersGroup_"], [class*="membersGroup_"] {
+  color: #7F7F7F !important; font-family: var(--mirc-font) !important;
+  text-transform: none !important; letter-spacing: 0 !important;
+  font-size: calc(var(--mirc-size) - 2px) !important;
+}
+[class*="members_"] [class*="offline_"] { opacity: .6 !important; }
+
+/* =========================================================================
+   9. Buttons, inputs, checkboxes -> Win98 controls
+   ========================================================================= */
+button[class*="lookFilled_"], button[class*="colorBrand_"], button[class*="colorPrimary_"][class*="lookFilled"],
+button[class*="button_"][class*="sizeSmall"][class*="lookFilled"] {
+  background: var(--win-face) !important;
+  color: #000 !important;
+  box-shadow: var(--w98-raised) !important;
+  border: 0 !important; border-radius: 0 !important;
+  font: 11px var(--win-font) !important;
+  min-height: 23px;
+}
+button[class*="lookFilled_"] *, button[class*="colorBrand_"] * { color: #000 !important; }
+button[class*="lookFilled_"]:active, button[class*="colorBrand_"]:active { box-shadow: var(--w98-sunken) !important; }
+button[class*="lookFilled_"]:focus-visible { outline: 1px dotted #000 !important; outline-offset: -4px; }
+button[class*="colorRed_"][class*="lookFilled"], button[class*="colorRed_"][class*="lookFilled"] * { color: #800000 !important; }
+
+input[type="text"], input[type="search"], input[type="email"], input[type="password"],
+textarea, [class*="inputDefault_"], [class*="input_"][class*="inputWrapper"] input {
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: var(--w98-field) !important;
+  border: 0 !important; border-radius: 0 !important;
+  font: 11px var(--win-font) !important;
+}
+form [class*="channelTextArea_"] textarea { background: transparent !important; color: var(--mirc-chat) !important; box-shadow: none !important; }
+
+[class*="switch_"], [class*="control_"] [class*="container_"][class*="checked"] { border-radius: 0 !important; }
+
+/* =========================================================================
+   10. Context menus -> grey Win98 menus with navy highlight
+   ========================================================================= */
+[role="menu"], [class*="menu_"][role="menu"] {
+  background: var(--win-face) !important;
+  box-shadow: var(--w98-raised), 2px 2px 0 rgba(0,0,0,.35) !important;
+  border: 0 !important; border-radius: 0 !important;
+  padding: 3px !important;
+  font: 11px var(--win-font) !important;
+}
+[role="menu"] [role="menuitem"], [role="menu"] [role="menuitemcheckbox"], [role="menu"] [role="menuitemradio"],
+[role="menu"] [role="menuitem"] *, [role="menu"] [role="menuitemcheckbox"] *, [role="menu"] [role="menuitemradio"] * {
+  color: #000 !important;
+  font-family: var(--win-font) !important;
+  font-size: 11px !important;
+}
+[role="menu"] [role="menuitem"], [role="menu"] [role="menuitemcheckbox"], [role="menu"] [role="menuitemradio"] {
+  border-radius: 0 !important; padding-top: 3px !important; padding-bottom: 3px !important; min-height: 0 !important;
+}
+[role="menu"] [class*="focused_"], [role="menu"] [role="menuitem"]:hover,
+[role="menu"] [role="menuitemcheckbox"]:hover, [role="menu"] [role="menuitemradio"]:hover {
+  background: #000080 !important;
+}
+[role="menu"] [class*="focused_"] *, [role="menu"] [class*="focused_"],
+[role="menu"] [role="menuitem"]:hover, [role="menu"] [role="menuitem"]:hover * { color: #fff !important; }
+[role="menu"] [class*="colorDanger_"], [role="menu"] [class*="colorDanger_"] * { color: #800000 !important; }
+[role="menu"] [role="separator"], [role="menu"] [class*="separator_"] {
+  border: 0 !important; height: 2px !important; background: transparent !important; box-shadow: var(--w98-etched);
+}
+
+/* =========================================================================
+   11. Tooltips -> yellow Windows tooltip
+   ========================================================================= */
+[class*="tooltip_"][role="tooltip"], div[class*="tooltip_"][class*="tooltipPrimary"] {
+  background: #FFFFE1 !important;
+  border: 1px solid #000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+[class*="tooltip_"][role="tooltip"] *, [class*="tooltipContent_"] {
+  color: #000 !important; font: 11px var(--win-font) !important;
+}
+[class*="tooltipPointer_"] { display: none !important; }
+
+/* =========================================================================
+   12. Modals, popouts, settings -> black panes inside grey beveled frames
+   ========================================================================= */
+[role="dialog"][class*="root_"], [class*="modal_"], div[class*="focusLock_"] > [role="dialog"],
+[class*="userPopout"], [class*="userProfileOuter_"], [class*="popout_"]:not([class*="buttons"]),
+[class*="autocomplete_"], [class*="emojiPicker_"], [class*="contentWrapper_"][class*="picker"] {
+  background: var(--mirc-bg) !important;
+  border: 3px solid var(--win-face) !important;
+  box-shadow: 0 0 0 1px #0a0a0a, 0 0 0 2px #dfdfdf, 2px 2px 0 2px rgba(0,0,0,.4) !important;
+  border-radius: 0 !important;
+}
+[role="dialog"] h1, [role="dialog"] h2, [class*="modal_"] h1, [class*="modal_"] h2 {
+  font-family: var(--win-font) !important;
+}
+[class*="footer_"][class*="modal"], [role="dialog"] [class*="footer_"] {
+  background: var(--win-face) !important;
+}
+[role="dialog"] [class*="footer_"] [class*="lookLink_"], [role="dialog"] [class*="footer_"] [class*="lookLink_"] * { color: #000 !important; }
+[class*="backdrop_"] { background: rgba(0, 128, 128, .55) !important; } /* the classic teal desktop */
+
+/* Settings sidebar */
+[class*="standardSidebarView_"] [class*="sidebarRegion_"], [class*="sidebarRegionScroller_"] {
+  background: var(--win-face) !important;
+}
+[class*="standardSidebarView_"] [class*="sidebarRegion_"] [class*="item_"],
+[class*="standardSidebarView_"] [class*="sidebarRegion_"] [class*="header_"] {
+  color: #000 !important; font: 11px var(--win-font) !important; text-transform: none !important;
+}
+[class*="standardSidebarView_"] [class*="sidebarRegion_"] [class*="selected_"] { background: #000080 !important; color: #fff !important; }
+[class*="standardSidebarView_"] [class*="contentRegion_"], [class*="contentRegionScroller_"] { background: var(--mirc-bg) !important; }
+
+/* =========================================================================
+   13. Win98 scrollbars
+   ========================================================================= */
+@supports not (-moz-appearance: none) {
+  #app-mount *:not([class*="none_"]) { scrollbar-width: auto !important; scrollbar-color: auto !important; }
+  ::-webkit-scrollbar { width: 16px !important; height: 16px !important; background: transparent; }
+  ::-webkit-scrollbar-track, [class*="scroller"]::-webkit-scrollbar-track {
+    background: repeating-conic-gradient(#c0c0c0 0 25%, #ffffff 0 50%) 0 0 / 2px 2px !important;
+    border: 0 !important; border-radius: 0 !important;
+  }
+  ::-webkit-scrollbar-thumb, [class*="scroller"]::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0 !important;
+    box-shadow: var(--w98-raised) !important;
+    border: 0 !important; border-radius: 0 !important;
+    min-height: 16px;
+  }
+  ::-webkit-scrollbar-corner { background: #c0c0c0 !important; }
+  ::-webkit-scrollbar-button:single-button {
+    display: block; width: 16px; height: 16px;
+    background-color: #c0c0c0; box-shadow: var(--w98-raised);
+    background-repeat: no-repeat; background-position: center;
+  }
+  ::-webkit-scrollbar-button:single-button:active { box-shadow: var(--w98-sunken); }
+  ::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M3.5 0L7 4H0z'/%3E%3C/svg%3E");
+  }
+  ::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0h7L3.5 4z'/%3E%3C/svg%3E");
+  }
+  ::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M4 0v7L0 3.5z'/%3E%3C/svg%3E");
+  }
+  ::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M0 0l4 3.5L0 7z'/%3E%3C/svg%3E");
+  }
+  [class*="scroller"][class*="thin_"]::-webkit-scrollbar, [class*="scroller"][class*="auto_"]::-webkit-scrollbar { width: 16px !important; }
+}
+@supports (-moz-appearance: none) {
+  #app-mount *:not([class*="none_"]) { scrollbar-color: #c0c0c0 #dfdfdf !important; scrollbar-width: auto !important; }
+}
+
+/* =========================================================================
+   14. Selection + focus look
+   ========================================================================= */
+::selection { background: #000080; color: #fff; }
+:focus-visible { outline: 1px dotted currentColor !important; }
+
+} /* end @-moz-document */
