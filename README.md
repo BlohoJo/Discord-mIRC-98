@@ -1,4 +1,4 @@
-# Discord mIRC 98 — green-on-black UserCSS for discord.com
+# Discord mIRC 98 — Make Discord.com look like mIRC running on Windows 98 (via both a custom User Style and custom User Script)
 
 Theme `discord-mirc98.user.css` **1.1.1** · companion `discord-mirc98-companion.user.js` **1.1.1**
 
