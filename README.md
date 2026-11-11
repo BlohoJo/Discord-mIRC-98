@@ -1,6 +1,6 @@
 # Discord mIRC 98 — Make Discord.com look like mIRC running on Windows 98 (via both a custom User Style and custom User Script)
 
-Theme `discord-mirc98.user.css` **1.1.1** · companion `discord-mirc98-companion.user.js` **1.1.1**
+Theme [`discord-mirc98.user.css`](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98.user.css) **1.1.1** · companion [`discord-mirc98-companion.user.js`](https://github.com/BlohoJo/mIRC-Discord-98/raw/refs/heads/main/discord-mirc98-companion.user.js) **1.1.1**
 
 Makes browser Discord look like mIRC running on Windows 98 SE: black panes, the mIRC 16-colour palette, Fixedsys text, beveled grey chrome, navy title bars, `[hh:mm] <nick>` lines, and **green** normal chat text.
 
