@@ -4,6 +4,16 @@ Theme `discord-mirc98.user.css` **1.1.1** · companion `discord-mirc98-companion
 
 Makes browser Discord look like mIRC running on Windows 98 SE: black panes, the mIRC 16-colour palette, Fixedsys text, beveled grey chrome, navy title bars, `[hh:mm] <nick>` lines, and **green** normal chat text.
 
+Install the extensions/add-ons for your browser of choice:
+
+- Stylus ([Chromium](https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne) / [Mozilla](https://addons.mozilla.org/en-US/firefox/addon/styl-us/))
+- Tampermonkey ([Chromium](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) / [Mozilla](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/))
+- Click the links to install:
+- Note that if you want to drag-and-drop locally, Firefox 153+ requires that you enable `Access local files on your computer` under `Permissions and data` on `about:addons` for Stylus & Tampermonkey. The same applies for pretty much _any_ version of Chromium/Chrome.
+
+<img width="1024" height="695" alt="Main" src="https://github.com/user-attachments/assets/0d3bca7c-1fa7-4ca8-be8e-f475a71d10f9" />
+<em>(Yes, the top menu bar does in fact function.)</em> ❖😎
+
 ### Why Stylus and not Tampermonkey
 
 Stylus is the better fit, for three reasons. First, this mod only needs styling, and Stylus injects CSS before the page paints, so you don't get a flash of the stock Discord theme on load. Tampermonkey would add its CSS after the page starts, then need extra code to keep up with Discord's React re-renders. Second, a stylesheet can't read or send anything from your account, which is the safer kind of client mod for a logged-in site. Third, the UserCSS format gives you a settings panel (colours, fonts, size, nick brackets, fake window chrome) without editing any code.
