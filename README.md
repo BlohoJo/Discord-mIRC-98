@@ -2,7 +2,7 @@
 
 Theme `discord-mirc98.user.css` **v1.1.1** · Companion `discord-mirc98-companion.user.js` **v1.1.1**
 
-Makes browser Discord look and behave like mIRC running on Windows 98 SE: black panes, the mIRC 16-colour palette, Fixedsys text, beveled grey chrome, navy title bars, `[hh:mm] <nick>` lines, **green** normal chat text, and a menu bar that actually works.
+Makes browser Discord look and behave like [mIRC](https://en.wikipedia.org/wiki/MIRC) running on Windows 98 SE: black panes, the mIRC 16-colour palette, Fixedsys text, beveled grey chrome, navy title bars, `[hh:mm] <nick>` lines, **green** normal chat text, and a menu bar that actually works.
 
 <img width="1024" height="695" alt="Main" src="https://github.com/user-attachments/assets/0d3bca7c-1fa7-4ca8-be8e-f475a71d10f9" />
 <em>(Yes, the top menu bar does in fact function.)</em> ❖😎
